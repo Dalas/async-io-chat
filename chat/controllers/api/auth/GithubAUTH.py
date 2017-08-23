@@ -1,5 +1,5 @@
 from chat.credentials import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
-
+from chat.utils import GitHubClient
 
 
 async def github_auth_handler(request):
@@ -27,13 +27,18 @@ async def github_auth_handler(request):
     # TODO: use refactor this client
     async with request.app['client'].get(url, data=data, headers=headers) as resp:
         assert resp.status == 200
-        data = await resp.text()
+        data = await resp.json()
 
     # TODO: add checks
     if 'access_token' not in data:
         pass
 
     # curl -H "Authorization: token OAUTH-TOKEN" https://api.github.com/user
+
+    # TODO: refactor this
+    gh = GitHubClient(request.app['client'])
+    res = await gh.users.get_auth_user(data['access_token'])
+    print(res)
 
     #
     # user = self.prepare_github_data(user)
