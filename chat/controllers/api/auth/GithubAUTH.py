@@ -1,5 +1,5 @@
 from chat.credentials import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
-from chat.utils import GitHubClient
+from chat.utils import GitHubAPIClient
 
 
 async def github_auth_handler(request):
@@ -36,7 +36,7 @@ async def github_auth_handler(request):
     # curl -H "Authorization: token OAUTH-TOKEN" https://api.github.com/user
 
     # TODO: refactor this
-    gh = GitHubClient(request.app['client'])
+    gh = GitHubAPIClient(request.app['client'])
     res = await gh.users.get_auth_user(data['access_token'])
     print(res)
 
