@@ -1,5 +1,4 @@
 from chat.credentials import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
-from chat.utils import GitHubAPIClient
 
 
 async def github_auth_handler(request):

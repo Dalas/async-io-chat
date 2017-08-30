@@ -1,16 +1,11 @@
 from .BaseAPIClient import BaseAPIClient
 
 
-class Users:
-    base_url = 'https://api.github.com/'
-
-    def __init__(self, client):
-        self._client = client
-
+class Users(BaseAPIClient):
     async def get_user_token(self, gcs, gci, code):
         url = "https://github.com/login/oauth/access_token"
 
-        data = {
+        body = {
             "client_secret": gcs,
             "client_id": gci,
             "code": code
@@ -22,15 +17,11 @@ class Users:
             "X-Accepted-OAuth-Scopes": "user"
         }
 
-        async with self._client.get(url, data=data, headers=headers) as resp:
-            assert resp.status == 200
-            data = await resp.json()
-
-        return data
+        return self._fetch(url, 'get', body=body, headers=headers)
 
     async def get_auth_user(self, token):
         headers = {
             'Authorization': f'token {token}'
         }
 
-        return await self.get('user', headers)
+        return await self.get('user', headers=headers)

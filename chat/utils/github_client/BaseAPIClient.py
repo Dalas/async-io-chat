@@ -33,8 +33,8 @@ class BaseAPIClient:
             # TODO: add code checks, exceptions
             return await resp.json()
 
-    async def get(self, url, headers=None, body=None):
+    async def get(self, url, *, headers=None, body=None):
         return await self._fetch(url, 'get', headers, body)
 
-    async def post(self, url, headers=None, body=None):
+    async def post(self, url, *, headers=None, body=None):
         return await self._fetch(url, 'post', headers, body)
