@@ -6,9 +6,9 @@ from aiohttp.web import HTTPFound
 
 
 async def github_auth_handler(request):
-    print(request)
     code = request.GET.get('code', None)
     gh_client = request.app['gh_client']
+    db = request.app['db']
 
     if not code:
         raise BadRequest('Missed GitHub authentication code!')
@@ -20,10 +20,11 @@ async def github_auth_handler(request):
 
     res = await gh_client.users.get_auth_user(data['access_token'])
 
-    user = await UsersModel.get_or_create_user_by_gh_user(request.app['db'], res)
-    session = await SessionsModel.update_or_create_session(request.app['db'], user['_id'])
+    user = await UsersModel.get_or_create_user_by_gh_user(db, res)
+    session = await SessionsModel.update_or_create_session(db, user['_id'])
 
     # TODO: change this
+
     response = HTTPFound('/chat')
     response.set_cookie('token', session['token'], secure=True)
     return response

@@ -5,9 +5,9 @@ from aiohttp.web import Response, json_response
 
 async def response_middleware(app, handler):
 
-    async def middleware_handler(request):
+    async def middleware_handler(request, *args, **kwargs):
         try:
-            response = await handler(request)
+            response = await handler(request, *args, **kwargs)
 
             if isinstance(response, Response):
                 return response
@@ -18,8 +18,9 @@ async def response_middleware(app, handler):
         except BaseResponseException as e:
             return json_response({'data': {}, 'error': e.error}, status=e.status)
 
-        except Exception as e:
-            print(e)  # TODO: add normal logger
-            return json_response({'data': {}, 'error': {'code': 1000, 'message': 'Internal server error!'}}, status=500)
+        # TODO: use only for debug
+        # except Exception as e:
+        #     print(e)  # TODO: add normal logger
+        #     return json_response({'data': {}, 'error': {'code': 1000, 'message': 'Internal server error!'}}, status=500)
 
     return middleware_handler
