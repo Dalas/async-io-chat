@@ -1,6 +1,6 @@
 from chat.exceptions import BaseResponseException
 
-from aiohttp.web import Response, json_response
+from aiohttp.web import Response, FileResponse, json_response
 
 
 async def response_middleware(app, handler):
@@ -9,7 +9,7 @@ async def response_middleware(app, handler):
         try:
             response = await handler(request, *args, **kwargs)
 
-            if isinstance(response, Response):
+            if isinstance(response, Response) or isinstance(response, FileResponse):
                 return response
             else:
                 data, status = response

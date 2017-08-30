@@ -1,1 +1,1 @@
-from .GithubAUTH import github_auth_handler
+from .GitHubAuth import github_auth_handler
