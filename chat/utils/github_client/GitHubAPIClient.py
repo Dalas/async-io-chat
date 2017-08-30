@@ -1,7 +1,7 @@
 from .Users import Users
 
 
-class GitHubClient:
+class GitHubAPIClient:
 
     def __init__(self, client):
         self._client = client

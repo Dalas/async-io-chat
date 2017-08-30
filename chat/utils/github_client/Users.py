@@ -1,3 +1,4 @@
+from .BaseAPIClient import BaseAPIClient
 
 
 class Users:
@@ -32,8 +33,4 @@ class Users:
             'Authorization': f'token {token}'
         }
 
-        async with self._client.get(self.base_url + 'user', headers=headers) as resp:
-            # TODO: add status checking
-            data = await resp.json()
-
-        return data
+        return await self.get('user', headers)

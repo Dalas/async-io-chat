@@ -1,1 +1,1 @@
-from .github_client import GitHubClient
+from .github_client import GitHubAPIClient
