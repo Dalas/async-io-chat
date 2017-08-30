@@ -5,39 +5,19 @@ from chat.utils import GitHubClient
 async def github_auth_handler(request):
     print(request)
     code = request.GET.get('code', None)
+    gh_client = request.app['gh_client']
 
     # TODO: Add custom exceptions
     if not code:
         raise Exception('Auth error')
 
-    url = "https://github.com/login/oauth/access_token"
-
-    data = {
-        "client_secret": GITHUB_CLIENT_SECRET,
-        "client_id": GITHUB_CLIENT_ID,
-        "code": code
-    }
-
-    headers = {
-        "Accept": "application/json",
-        "X-OAuth-Scopes": "user",
-        "X-Accepted-OAuth-Scopes": "user"
-    }
-
-    # TODO: use refactor this client
-    async with request.app['client'].get(url, data=data, headers=headers) as resp:
-        assert resp.status == 200
-        data = await resp.json()
+    data = await gh_client.users.get_user_token(GITHUB_CLIENT_SECRET, GITHUB_CLIENT_ID, code)
 
     # TODO: add checks
     if 'access_token' not in data:
         pass
 
-    # curl -H "Authorization: token OAUTH-TOKEN" https://api.github.com/user
-
-    # TODO: refactor this
-    gh = GitHubClient(request.app['client'])
-    res = await gh.users.get_auth_user(data['access_token'])
+    res = await gh_client.users.get_auth_user(data['access_token'])
     print(res)
 
     #
