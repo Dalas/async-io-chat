@@ -1,6 +1,7 @@
 from chat.routes import register_routes
 from chat.utils.github_client import GitHubAPIClient
 from chat.db import setup_db
+from chat.middlewares import response_middleware
 
 from aiohttp_swagger import setup_swagger
 from aiohttp import web, ClientSession
@@ -19,7 +20,7 @@ def prepare_gh_client(app):
 
 def create_app():
     loop = asyncio.get_event_loop()
-    app = web.Application(loop=loop)  # , middlewares=[])
+    app = web.Application(loop=loop, middlewares=(response_middleware, ))
 
     register_routes(app)
     prepare_client(app)

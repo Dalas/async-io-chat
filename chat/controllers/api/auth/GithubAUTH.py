@@ -1,5 +1,6 @@
 from chat.credentials import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
 from chat.models import UsersModel, SessionsModel
+from chat.exceptions import BadRequest, ExternalServiceError
 
 from aiohttp.web import HTTPFound
 
@@ -9,15 +10,13 @@ async def github_auth_handler(request):
     code = request.GET.get('code', None)
     gh_client = request.app['gh_client']
 
-    # TODO: Add custom exceptions
     if not code:
-        raise Exception('Auth error')
+        raise BadRequest('Missed GitHub authentication code!')
 
     data = await gh_client.users.get_user_token(GITHUB_CLIENT_SECRET, GITHUB_CLIENT_ID, code)
 
-    # TODO: Add custom exceptions
     if 'access_token' not in data:
-        raise Exception('GitHub auth error')
+        raise ExternalServiceError('GitHub authentication failure!')
 
     res = await gh_client.users.get_auth_user(data['access_token'])
 
