@@ -5,7 +5,7 @@ class Users(BaseAPIClient):
     async def get_user_token(self, gcs, gci, code):
         url = "https://github.com/login/oauth/access_token"
 
-        body = {
+        data = {
             "client_secret": gcs,
             "client_id": gci,
             "code": code
@@ -17,7 +17,7 @@ class Users(BaseAPIClient):
             "X-Accepted-OAuth-Scopes": "user"
         }
 
-        async with self._cli.get(url, data=body, headers=headers) as resp:
+        async with self._cli.get(url, data=data, headers=headers) as resp:
             # TODO: add status check
             return await resp.json()
 

@@ -6,12 +6,14 @@ from aiohttp.web import HTTPFound
 def login_required(func):
 
     async def wrapper(request, *args, **kwargs):
-        print('here')
         token = request.cookies.get('token', None)
         if token:
             session = await SessionsModel.get(request.app['db'], {'token': token})
             # TODO: refactor this
-            request.session = session
+            if session:
+                request.session = session
+            else:
+                return HTTPFound('/')
         else:
             return HTTPFound('/')
 

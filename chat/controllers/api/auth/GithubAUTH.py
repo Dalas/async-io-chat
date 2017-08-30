@@ -21,10 +21,10 @@ async def github_auth_handler(request):
     res = await gh_client.users.get_auth_user(data['access_token'])
 
     user = await UsersModel.get_or_create_user_by_gh_user(db, res)
-    session = await SessionsModel.update_or_create_session(db, user['_id'])
+    session = await SessionsModel.update_or_create_session(db, user['_id'], data['access_token'])
 
     # TODO: change this
 
     response = HTTPFound('/chat')
-    response.set_cookie('token', session['token'], secure=True)
+    response.set_cookie('token', session['token'])
     return response

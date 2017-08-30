@@ -21,19 +21,19 @@ class BaseAPIClient:
                 **self.headers
             }
 
-    async def _fetch(self, url, method, headers, body):
+    async def _fetch(self, url, method, headers, data):
         headers = self.prepare_headers(headers)
 
         async with getattr(self._cli, method)(
             url,
             headers=headers,
-            data=body
+            data=data
         ) as resp:
             # TODO: add code checks, exceptions
             return await resp.json()
 
-    async def get(self, url, *, headers=None, body=None):
-        return await self._fetch(self.base_url + url, 'get', headers, body)
+    async def get(self, url, *, headers=None, data=None):
+        return await self._fetch(self.base_url + url, 'get', headers, data)
 
-    async def post(self, url, *, headers=None, body=None):
-        return await self._fetch(self.base_url + url, 'post', headers, body)
+    async def post(self, url, *, headers=None, data=None):
+        return await self._fetch(self.base_url + url, 'post', headers, data)
