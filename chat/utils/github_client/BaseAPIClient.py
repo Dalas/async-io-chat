@@ -26,7 +26,7 @@ class BaseAPIClient:
         headers = self.prepare_headers(headers)
 
         async with getattr(self._cli, method)(
-            self.base_url + url,
+            url,
             headers=headers,
             data=body
         ) as resp:
@@ -34,7 +34,7 @@ class BaseAPIClient:
             return await resp.json()
 
     async def get(self, url, *, headers=None, body=None):
-        return await self._fetch(url, 'get', headers, body)
+        return await self._fetch(self.base_url + url, 'get', headers, body)
 
     async def post(self, url, *, headers=None, body=None):
-        return await self._fetch(url, 'post', headers, body)
+        return await self._fetch(self.base_url + url, 'post', headers, body)

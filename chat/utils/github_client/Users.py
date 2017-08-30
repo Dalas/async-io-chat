@@ -17,7 +17,9 @@ class Users(BaseAPIClient):
             "X-Accepted-OAuth-Scopes": "user"
         }
 
-        return self._fetch(url, 'get', body=body, headers=headers)
+        async with self._cli.get(url, data=body, headers=headers) as resp:
+            # TODO: add status check
+            return await resp.json()
 
     async def get_auth_user(self, token):
         headers = {
